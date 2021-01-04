@@ -39,8 +39,36 @@
           <string>Attributes</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../clones/qtutils/qtutils/icons/icons.qrc">
+          <iconset resource="../../../qtutils/icons/icons.qrc">
            <normaloff>:/qtutils/fugue/table-export.png</normaloff>:/qtutils/fugue/table-export.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_set_bg">
+         <property name="toolTip">
+          <string>Set current image as the background, to be subtracted from displayed images</string>
+         </property>
+         <property name="text">
+          <string>Set background</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../qtutils/icons/icons.qrc">
+           <normaloff>:/qtutils/fugue/image--plus.png</normaloff>:/qtutils/fugue/image--plus.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_clear_bg">
+         <property name="toolTip">
+          <string>Clear the background image</string>
+         </property>
+         <property name="text">
+          <string>Clear background</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../qtutils/icons/icons.qrc">
+           <normaloff>:/qtutils/fugue/image--minus.png</normaloff>:/qtutils/fugue/image--minus.png</iconset>
          </property>
         </widget>
        </item>
@@ -53,7 +81,7 @@
           <string>Snap</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../clones/qtutils/qtutils/icons/icons.qrc">
+          <iconset resource="../../../qtutils/icons/icons.qrc">
            <normaloff>:/qtutils/fugue/control-stop.png</normaloff>:/qtutils/fugue/control-stop.png</iconset>
          </property>
         </widget>
@@ -67,7 +95,7 @@
           <string>Continuous</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../clones/qtutils/qtutils/icons/icons.qrc">
+          <iconset resource="../../../qtutils/icons/icons.qrc">
            <normaloff>:/qtutils/fugue/control.png</normaloff>:/qtutils/fugue/control.png</iconset>
          </property>
         </widget>
@@ -81,7 +109,7 @@
           <string>Stop</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../clones/qtutils/qtutils/icons/icons.qrc">
+          <iconset resource="../../../qtutils/icons/icons.qrc">
            <normaloff>:/qtutils/fugue/control-stop-square.png</normaloff>:/qtutils/fugue/control-stop-square.png</iconset>
          </property>
         </widget>
@@ -125,7 +153,7 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset resource="../../../clones/qtutils/qtutils/icons/icons.qrc">
+            <iconset resource="../../../qtutils/icons/icons.qrc">
              <normaloff>:/qtutils/fugue/arrow-turn-180-left.png</normaloff>:/qtutils/fugue/arrow-turn-180-left.png</iconset>
            </property>
           </widget>
@@ -162,7 +190,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../../clones/qtutils/qtutils/icons/icons.qrc"/>
+  <include location="../../../qtutils/icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

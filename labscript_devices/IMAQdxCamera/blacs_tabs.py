@@ -56,7 +56,8 @@ class ImageReceiver(ZMQServer):
         self.label_fps = label_fps
         self.last_frame_time = None
         self.frame_rate = None
-        self.update_event = None
+        self.image = None
+        self.bg_image = None
 
     @inmain_decorator(wait_for_return=True)
     def handler(self, data):
@@ -80,14 +81,10 @@ class ImageReceiver(ZMQServer):
             else:
                 self.frame_rate = 1 / dt
         self.last_frame_time = this_frame_time
-        if self.image_view.image is None:
-            # First time setting an image. Do autoscaling etc:
-            self.image_view.setImage(image.swapaxes(-1, -2))
-        else:
-            # Updating image. Keep zoom/pan/levels/etc settings.
-            self.image_view.setImage(
-                image.swapaxes(-1, -2), autoRange=False, autoLevels=False
-            )
+        
+        self.image = image
+        self.update_image()
+
         # Update fps indicator:
         if self.frame_rate is not None:
             self.label_fps.setText(f"{self.frame_rate:.01f} fps")
@@ -104,6 +101,31 @@ class ImageReceiver(ZMQServer):
         # right solution to this problem. This solves issue #36.
         QtGui.QApplication.instance().sendPostedEvents()
         return self.NO_RESPONSE
+
+    @inmain_decorator(wait_for_return=True)
+    def update_image(self):
+        image = self.image
+        if self.bg_image is not None:
+            image = self.image - self.bg_image
+        if self.image_view.image is None:
+            # First time setting an image. Do autoscaling etc:
+            self.image_view.setImage(image.swapaxes(-1, -2))
+        else:
+            # Updating image. Keep zoom/pan/levels/etc settings.
+            self.image_view.setImage(
+                image.swapaxes(-1, -2), autoRange=False, autoLevels=False
+            )
+
+    @inmain_decorator()
+    def set_bg_image(self):
+        self.bg_image = self.image
+        self.update_image()
+
+    @inmain_decorator()
+    def clear_bg_image(self):
+        self.bg_image = None
+        self.update_image()
+
 
 
 class IMAQdxCameraTab(DeviceTab):
@@ -128,6 +150,8 @@ class IMAQdxCameraTab(DeviceTab):
         self.ui.pushButton_snap.clicked.connect(self.on_snap_clicked)
         self.ui.pushButton_attributes.clicked.connect(self.on_attributes_clicked)
         self.ui.toolButton_nomax.clicked.connect(self.on_reset_rate_clicked)
+        self.ui.pushButton_set_bg.clicked.connect(self.on_set_bg_clicked)
+        self.ui.pushButton_clear_bg.clicked.connect(self.on_clear_bg_clicked)
 
         self.attributes_dialog = UiLoader().load(attributes_ui_filepath)
         self.attributes_dialog.setParent(self.ui.parent())
@@ -146,6 +170,7 @@ class IMAQdxCameraTab(DeviceTab):
         )
         self.ui.horizontalLayout.addWidget(self.image)
         self.ui.pushButton_stop.hide()
+        self.ui.pushButton_clear_bg.hide()
         self.ui.doubleSpinBox_maxrate.hide()
         self.ui.toolButton_nomax.hide()
         self.ui.label_fps.hide()
@@ -258,6 +283,16 @@ class IMAQdxCameraTab(DeviceTab):
         self.ui.label_fps.hide()
         self.acquiring = False
         self.stop_continuous()
+
+    def on_set_bg_clicked(self, button):
+        self.image_receiver.set_bg_image()
+        self.ui.pushButton_set_bg.hide()
+        self.ui.pushButton_clear_bg.show()
+
+    def on_clear_bg_clicked(self, button):
+        self.image_receiver.clear_bg_image()
+        self.ui.pushButton_set_bg.show()
+        self.ui.pushButton_clear_bg.hide()
 
     def on_copy_clicked(self, button):
         text = self.attributes_dialog.plainTextEdit.toPlainText()
